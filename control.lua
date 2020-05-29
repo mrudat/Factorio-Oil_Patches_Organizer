@@ -1,51 +1,41 @@
 -- "Globals"
 
-local OilCenters
-
-local ResourceEntities
-
-local AutoOrganize
-
-local GridCellSize
+local GridCellSize = settings.global["oil-patches-organizer-grid-cell-size"].value
 
 -- Functions
 
-function FindResourceEntities()
-  local resource_entities = {}
-  local organizer = game.item_prototypes["oil-patches-organizer"]
-  local entity_filters = organizer.entity_filters
-  for entity_name in pairs(entity_filters) do
-    resource_entities[#resource_entities + 1] = entity_name
+do
+  local resource_entities
+  function FindResourceEntities()
+    if resource_entities then return resource_entities end
+    resource_entities = {}
+    local organizer = game.item_prototypes["oil-patches-organizer"]
+    local entity_filters = organizer.entity_filters
+    for entity_name in pairs(entity_filters) do
+      resource_entities[#resource_entities + 1] = entity_name
+    end
+    if #resource_entities == 0 then
+      error('Could not find any resources to arrange, refusing to proceed.')
+    end
+    FindResourceEntities = function() return resource_entities end
+    return resource_entities
   end
-  return resource_entities
 end
 
 function on_init()
   global.OilCenters = {}
-  global.ResourceEntities = FindResourceEntities()
-
-  on_load()
-end
-
-function on_load()
-  OilCenters = global.OilCenters
-  ResourceEntities = global.ResourceEntities
-
-  AutoOrganize = settings.global["oil-patches-organizer-autoorganize"].value
-  GridCellSize = settings.global["oil-patches-organizer-grid-cell-size"].value
-end
-
-function on_configuration_changed()
-  global.ResourceEntities = FindResourceEntities()
 end
 
 function on_runtime_mod_setting_changed(event)
   if event.setting_type ~= "runtime-global" then return end
   local setting = event.setting
   if setting == "oil-patches-organizer-autoorganize" then
-    AutoOrganize = settings.global["oil-patches-organizer-autoorganize"].value
-  end
-  if setting == "oil-patches-organizer-grid-cell-size" then
+    if settings.global["oil-patches-organizer-autoorganize"].value then
+      script.on_event(defines.events.on_chunk_generated, on_chunk_generated)
+    else
+      script.on_event(defines.events.on_chunk_generated, nil)
+    end
+  elseif setting == "oil-patches-organizer-grid-cell-size" then
     GridCellSize = settings.global["oil-patches-organizer-grid-cell-size"].value
   end
 end
@@ -143,14 +133,14 @@ end
 function on_chunk_generated(event)
   local surface = event.surface
   if not surface.name == "nauvis" then return end
-  if not AutoOrganize then return end
   local resource_deposits = surface.find_entities_filtered({
     area = event.area,
-    name = ResourceEntities
+    name = FindResourceEntities()
   })
   if not next(resource_deposits) then return end
   GridDeposits(resource_deposits, surface)
 end
+
 
 function on_player_selected_area(event)
   if event.item ~= "oil-patches-organizer" then return end
@@ -167,6 +157,8 @@ function on_player_alt_selected_area(event)
   local area = event.area
   local player_index = event.player_index
   local surface = event.surface
+
+  local OilCenters = global.OilCenters
 
   if IsZeroSize(area) then
     OilCenters[player_index] = {
@@ -208,7 +200,9 @@ script.on_configuration_changed(on_configuration_changed)
 
 script.on_event({defines.events.on_runtime_mod_setting_changed}, on_runtime_mod_setting_changed)
 
-script.on_event(defines.events.on_chunk_generated, on_chunk_generated)
+if settings.global["oil-patches-organizer-autoorganize"].value then
+  script.on_event(defines.events.on_chunk_generated, on_chunk_generated)
+end
 
 script.on_event(defines.events.on_player_selected_area, on_player_selected_area)
 

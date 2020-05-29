@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.11
+Date: 2020-05-29
+
+  Changes:
+    - Log the list of resources we will (attempt to) arrange.
+    - Explicitly crash when there are no resources to arrange.
+  Bugfixes:
+    - Fixed changelog entry.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.0.10
 Date: 2020-05-26
 
@@ -7,7 +17,6 @@ Date: 2020-05-26
   Changes:
     - Updated to 0.18
     - Reworked the code to take advantage of updated APIs
-    - Supports any resource that can be extracted with the base pumpjack
   Gui:
     - The organizer is now a shortcut.
     - Created a high-resolution icon.

@@ -13,3 +13,12 @@ for resource_name, resource in pairs(data.raw["resource"]) do
     resource_entities[#resource_entities + 1] = resource_name
   end
 end
+
+if #resource_entities == 0 then
+  error('Could not find any resources to arrange, refusing to proceed.')
+end
+
+log('found the following resources to organize:')
+for i,resource_name in ipairs(resource_entities) do
+  log(resource_name)
+end

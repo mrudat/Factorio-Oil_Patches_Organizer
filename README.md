@@ -1,4 +1,4 @@
-[Oil Patches Organizer](https://mods.factorio.com/mod/Oil Patches Organizer) updated for 0.18 until [Apriori](https://mods.factorio.com/user/Apriori) gets a [round tuit](https://en.wiktionary.org/wiki/round_tuit).
+[Oil Patches Organizer](https://mods.factorio.com/mod/Oil%20Patches%20Organizer) updated for 0.18 until [Apriori](https://mods.factorio.com/user/Apriori) gets a [round tuit](https://en.wiktionary.org/wiki/round_tuit).
 
 Adds a tool to organizer oil patches into a grid for handy pumping.
 
