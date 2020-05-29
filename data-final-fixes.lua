@@ -15,8 +15,11 @@ for resource_name, resource in pairs(data.raw["resource"]) do
 end
 
 if #resource_entities == 0 then
-  error('Could not find any resources to arrange, refusing to proceed.')
+  error('Unable to continue, could not find any resources to arrange.')
 end
+
+-- to trigger error for non-resource entity
+--resource_entities[#resource_entities + 1] = 'offshore-pump'
 
 log('found the following resources to organize:')
 for i,resource_name in ipairs(resource_entities) do

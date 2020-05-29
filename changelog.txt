@@ -1,10 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.12
+Date: 2020-05-29
+
+  Changes:
+    - Abort with an error if, somehow, a non-resource entity was added to the list of entities to re-arrange.
+  Bugfixes:
+    - Fixed changelog entry.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.0.11
 Date: 2020-05-29
 
   Changes:
     - Log the list of resources we will (attempt to) arrange.
     - Explicitly crash when there are no resources to arrange.
+    - Reworked control script to hopefully be more efficient.
   Bugfixes:
     - Fixed changelog entry.
 

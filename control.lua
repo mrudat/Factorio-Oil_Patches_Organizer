@@ -4,26 +4,30 @@ local GridCellSize = settings.global["oil-patches-organizer-grid-cell-size"].val
 
 -- Functions
 
-do
-  local resource_entities
-  function FindResourceEntities()
-    if resource_entities then return resource_entities end
-    resource_entities = {}
-    local organizer = game.item_prototypes["oil-patches-organizer"]
-    local entity_filters = organizer.entity_filters
-    for entity_name in pairs(entity_filters) do
-      resource_entities[#resource_entities + 1] = entity_name
+function FindResourceEntities()
+  global.resource_entities = {}
+  local resource_entities = global.resource_entities
+  local organizer = game.item_prototypes["oil-patches-organizer"]
+  local entity_filters = organizer.entity_filters
+  for entity_name, entity_prototype in pairs(entity_filters) do
+    resource_entities[#resource_entities + 1] = entity_name
+    if entity_prototype.type ~= "resource" then
+      error(string.format('Unable to continue, filter includes "%s", which is not a resource.', entity_name))
     end
-    if #resource_entities == 0 then
-      error('Could not find any resources to arrange, refusing to proceed.')
-    end
-    FindResourceEntities = function() return resource_entities end
-    return resource_entities
+  end
+  if #resource_entities == 0 then
+    error('Unable to continue, could not find any resources to arrange.')
   end
 end
 
 function on_init()
   global.OilCenters = {}
+
+  FindResourceEntities()
+end
+
+function on_configuration_changed(event)
+  FindResourceEntities()
 end
 
 function on_runtime_mod_setting_changed(event)
@@ -135,7 +139,7 @@ function on_chunk_generated(event)
   if not surface.name == "nauvis" then return end
   local resource_deposits = surface.find_entities_filtered({
     area = event.area,
-    name = FindResourceEntities()
+    name = global.resource_entities
   })
   if not next(resource_deposits) then return end
   GridDeposits(resource_deposits, surface)
