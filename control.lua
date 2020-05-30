@@ -27,6 +27,11 @@ function on_init()
 end
 
 function on_configuration_changed(event)
+  if not global.OilCenters then
+    log("Someone deleted my table!")
+    global.OilCenters = {}
+  end
+
   FindResourceEntities()
 end
 
@@ -197,8 +202,6 @@ end
 -- register for events.
 
 script.on_init(on_init)
-
-script.on_load(on_load)
 
 script.on_configuration_changed(on_configuration_changed)
 

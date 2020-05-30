@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.13
+Date: 2020-05-30
+
+  Changes:
+    - Set our global variable if it is missing in on_configuration_changed, even though it should have been set in on_init.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.0.12
 Date: 2020-05-29
 
